@@ -5,7 +5,7 @@ API for Device Information
 ## Prerequisites
 
 - Maven (https://maven.apache.org/download.cgi)
-- Java OpenJDK 23 (https://openjdk.org/projects/jdk/23/)
+- Java OpenJDK 22 (https://openjdk.org/projects/jdk/22/)
 - Docker desktop v4.33.1 (https://www.docker.com/products/docker-desktop/)
 
 ## Useful commands

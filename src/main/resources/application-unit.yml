@@ -1,0 +1,32 @@
+spring:
+    datasource:
+        url: jdbc:h2:mem:testdb
+        driverClassName: org.h2.Driver
+        username: sa
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.H2Dialect
+logging:
+    file:
+        path: ./target
+    level:
+        root: INFO
+        "[com.e3.api.product_device]": INFO
+        "[org.springframework.web]": INFO
+        "[org.springframework.security]": INFO
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+    endpoint:
+        metrics:
+            enabled: true
+scheduler:
+    brands:
+        expression: "0 00 00 * * *"
+    devices:
+        expression: "0 05 00 * * *"

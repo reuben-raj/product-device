@@ -1,0 +1,25 @@
+spring:
+    application:
+        name: product-device
+    datasource:
+        url: jdbc:postgresql://localhost:5432/device
+        username: postgres
+        password: postgres
+        hikari:
+            connectionTimeout: 30000
+            maximumPoolSize: 10
+            maxLifetime: 30000
+            idleTimeout: 30000
+            validationTimeout: 30000
+            initializationFailTimeout: 30000
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+    config:
+        import: "device-config.yml"
+logging:
+    level:
+        root: INFO
+        com:
+            mbb: DEBUG

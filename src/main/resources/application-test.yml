@@ -1,0 +1,30 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/device
+        username: postgres
+        password: postgres
+    jpa:
+        hibernate:
+            ddl-auto: none
+        show-sql: false
+logging:
+    file:
+        path: ./logs
+    level:
+        root: INFO
+        "[com.e3.api.product_device]": INFO
+        "[org.springframework.web]": INFO
+        "[org.springframework.security]": INFO
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+    endpoint:
+        metrics:
+            enabled: true
+scheduler:
+    brands:
+        expression: "0 00 00 * * *"
+    devices:
+        expression: "0 05 00 * * *"
