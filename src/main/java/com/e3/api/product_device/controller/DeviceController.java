@@ -23,7 +23,7 @@ import com.e3.api.product_device.service.DeviceService;
 @RequestMapping("/device")
 public class DeviceController {
 
-    Logger logger = LoggerFactory.getLogger(DeviceController.class);
+    Logger log = LoggerFactory.getLogger(DeviceController.class);
 
     @Autowired
     private DeviceService deviceService;
@@ -48,13 +48,13 @@ public class DeviceController {
     public ResponseEntity<?> searchDevices(@RequestBody DeviceRequest deviceRequest) {
         try {
             List<Device> devices = deviceService.searchDevices(deviceRequest);
-            logger.info("devices size :"+devices.size());
+            log.info("devices size :"+devices.size());
             if(devices.size() < 1) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
             return ResponseEntity.ok(devices);
         } catch(Exception e) {
-            logger.error("Internal server error: ", e);
+            log.error("Internal server error: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }

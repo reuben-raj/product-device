@@ -3,15 +3,17 @@ package com.e3.api.product_device.scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.e3.api.product_device.service.DeviceService;
 
 @Component
+@EnableScheduling
 public class DeviceScheduler {
 
-    Logger logger = LoggerFactory.getLogger(DeviceScheduler.class);
+    Logger log = LoggerFactory.getLogger(DeviceScheduler.class);
 
     @Autowired
     private DeviceService deviceService;

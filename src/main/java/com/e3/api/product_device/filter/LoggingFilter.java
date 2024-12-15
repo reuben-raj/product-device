@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class LoggingFilter extends OncePerRequestFilter {
-    public static final Logger logger = LoggerFactory.getLogger(LoggingFilter.class);
+    public static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 
     @Override
     protected void doFilterInternal(
@@ -37,11 +37,11 @@ public class LoggingFilter extends OncePerRequestFilter {
     }
 
     private void logRequest(HttpServletRequest request, String correlationId) {
-        logger.info("Request [{}]: {} {}", correlationId, request.getMethod(), request.getRequestURI());
+        log.info("Request [{}]: {} {}", correlationId, request.getMethod(), request.getRequestURI());
     }
 
     private void logResponse(ResponseWrapper responseWrapper, String correlationId) {
-        logger.info("Response [{}]: Status = {}, Body = {}", correlationId, 
+        log.info("Response [{}]: Status = {}, Body = {}", correlationId, 
             responseWrapper.getStatus(), 
             new String(responseWrapper.getContentAsByteArray()));
     }

@@ -17,7 +17,7 @@ import com.e3.api.product_device.dto.DeviceResponse;
 
 public class DeviceAPIResponseHandler {
     
-    static Logger logger = LoggerFactory.getLogger(DeviceAPIResponseHandler.class);
+    static Logger log = LoggerFactory.getLogger(DeviceAPIResponseHandler.class);
 
     public static ResponseEntity<?> handleBrandResponse(ResponseEntity<DeviceAPIResponseWrapper<List<BrandResponse>>> responseEntity) {
         DeviceAPIResponseWrapper<List<BrandResponse>> responseBody = responseEntity.getBody();
