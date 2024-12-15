@@ -17,5 +17,8 @@ Run and test locally:
 -   `docker compose up` spins up a local Docker instance 
     - A PostgreSQL database will be available on localhost:5432
 
+Unit test and coverage:
+-   `.\mvnw test jacoco:report` runs unit tests and generates code coverage report
+
 ## Postman
 Postman collection can be found here: https://www.postman.com/reuben-raj90/workspace/product-device
