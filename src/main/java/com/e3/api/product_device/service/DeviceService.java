@@ -3,6 +3,9 @@ package com.e3.api.product_device.service;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -36,7 +39,7 @@ import com.e3.api.product_device.repository.DeviceRepository;
 @Service
 public class DeviceService {
 
-    Logger logger = LoggerFactory.getLogger(DeviceService.class);
+    Logger log = LoggerFactory.getLogger(DeviceService.class);
 
     private final String deviceDataUrl;
     private final RestTemplate restTemplate;
@@ -46,6 +49,8 @@ public class DeviceService {
 
     @Autowired
     private DeviceRepository deviceRepository;
+
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     public DeviceService(@Value("${device.datasource.url}") String deviceDataUrl, RestTemplate restTemplate) {
         this.deviceDataUrl = deviceDataUrl;
@@ -58,11 +63,13 @@ public class DeviceService {
     }
 
     public List<Brand> getBrandsFromSource() {
+        List<Future<Brand>> futures = new ArrayList<>();
         List<Brand> brands = new ArrayList<>();
 
         String url = UriComponentsBuilder.fromHttpUrl(deviceDataUrl)
             .queryParam("route", "brand-list")
             .toUriString();
+        
         ResponseEntity<DeviceAPIResponseWrapper<List<BrandResponse>>> responseEntity =
             restTemplate.exchange(
                 url, 
@@ -73,19 +80,35 @@ public class DeviceService {
         List<BrandResponse> brandResponses = responseEntity.getBody().getData();
 
         for(BrandResponse brandResponse : brandResponses) {
-            if(StringUtils.hasLength(brandResponse.getBrandName()) 
-                && StringUtils.hasLength(brandResponse.getKey())) {
-                Brand brand = new Brand();
-                brand.setId(brandResponse.getBrandId());
-                brand.setBrandName(brandResponse.getBrandName());
-                brand.setKey(brandResponse.getKey());
-                brand.setCreatedBy((long) 1);
-                brand.setUpdatedBy((long) 1);
-                brands.add(brand);
+            futures.add(executorService.submit(() -> processBrandResponse(brandResponse)));
+        }
+
+        for(Future<Brand> future : futures) {
+            try {
+                Brand brand = future.get();
+                if(brand != null) {
+                    brands.add(brand);
+                }
+            } catch(Exception e) {
+                log.error("Error processing brand response: ",e);
             }
         }
 
         return brands;
+    }
+
+    private Brand processBrandResponse(BrandResponse brandResponse) {
+        if (StringUtils.hasLength(brandResponse.getBrandName()) 
+                && StringUtils.hasLength(brandResponse.getKey())) {
+            Brand brand = new Brand();
+            brand.setId(brandResponse.getBrandId());
+            brand.setBrandName(brandResponse.getBrandName());
+            brand.setKey(brandResponse.getKey());
+            brand.setCreatedBy(1L);
+            brand.setUpdatedBy(1L);
+            return brand;
+        }
+        return null;
     }
 
     public List<Brand> updateBrandsFromSource() {
@@ -196,7 +219,7 @@ public class DeviceService {
             }
             return devices;
         } catch(Exception e) {
-            logger.error("Error during API call: ", e);
+            log.error("Error during API call: ", e);
             throw new RuntimeException("Failed to search devices");
         }
     }
